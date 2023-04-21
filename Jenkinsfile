@@ -16,7 +16,6 @@ pipeline {
             ])
         }
         stage('Execute Application') {
-            
             sh "ls -ltra"
         }
     }
