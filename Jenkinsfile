@@ -1,43 +1,22 @@
 pipeline {
     agent any
+    options {
+        // clean before build
+        skipDefaultCheckout(true)
+    }
     stages {
-        stage('Install Packages') {
-            steps {
-                echo "Installing Packages"
-                sh '''#!/bin/bash
-                    yes | python3 -m pip install ncclient 
-                    yes | python3 -m pip install pandas 
-                    yes | python3 -m pip install ipaddress 
-                    yes | python3 -m pip install netaddr 
-                    yes | python3 -m pip install prettytable
-                    yes | python3 -m pip install pylint
-                '''
-            }
+        stage('Git Checkout') {
+            cleanWs()
+            checkout([$class: 'GitSCM',
+                    branches: [[name: '*/test']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CleanCheckout']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: '830e2b5c-4676-42b7-8aff-3551e02073e1', url: 'https://github.com/KiranMandhare/isp-backbone.git']]
+            ])
         }
-        stage('Check/Fix Violations') {
-            steps {
-                echo "Check and Fix Violations"
-                sh '''
-                score=$(pylint netman_netconf_obj2.py | grep -o "at [0-9]*" | grep -o "[0-9]*")
-                if [ "$score" -lt 5 ]; then
-                    echo "PyLint score for PEP8 code check is $score. Violation detected";
-                    exit 1
-                    
-                fi
-                '''
-            }
-        }
-        
         stage('Execute Application') {
-            steps {
-                sh "python3 netman_netconf_obj2.py"
-            }
-        }
-        stage('Unit test'){
-          steps {
-                echo 'Unit Testing....'
-                sh 'python3 -W ignore unitTesting.py'
-            }   
+            sh "ls -ltra"
         }
     }
     post {
