@@ -6,6 +6,7 @@ pipeline {
     }
     stages {
         stage('Git Checkout') {
+            steps{
             cleanWs()
             checkout([$class: 'GitSCM',
                     branches: [[name: '*/test']],
@@ -14,9 +15,14 @@ pipeline {
                     submoduleCfg: [],
                     userRemoteConfigs: [[credentialsId: '830e2b5c-4676-42b7-8aff-3551e02073e1', url: 'https://github.com/KiranMandhare/isp-backbone.git']]
             ])
+            }
+
         }
         stage('Execute Application') {
-            sh "ls -ltra"
+            steps{
+                    sh "ls -ltra"
+            }
+
         }
     }
     post {
