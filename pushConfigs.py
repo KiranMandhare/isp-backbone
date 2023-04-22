@@ -8,7 +8,7 @@ ios_devices = fetchConnectionParameter()
 i=0
 for router in ios_devices:
     with ConnectHandler(**router) as connection:
-        print("Comnected to "+router)
+        print("Connected to router")
         connection.enable()
         result= connection.send_config_from_file(host[i]+".conf")
         print("Config sent to router")
