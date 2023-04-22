@@ -43,10 +43,10 @@ pipeline {
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
             }
         }
-        
+
         stage('Push build to Nexus'){
             steps{
-                sh 'sudo cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
+                sh 'cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
             }
         }
     }
