@@ -38,6 +38,7 @@ pipeline {
 
             }
         }
+        
         stage('Build Router Config'){
             steps{
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
