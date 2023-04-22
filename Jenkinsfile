@@ -31,7 +31,7 @@ pipeline {
                     sh  'ansible-galaxy init isp-backbone'
             }
         }
-        
+
         stage('Create Ansible plauybook') {
             steps{
                     sh  'python3 generateAnsiblePlay.py'
@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Push build to Nexus'){
             steps{
-                sh 'cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
+                sh 'sudo cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
             }
         }
     }
