@@ -42,6 +42,8 @@ pipeline {
             steps{
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
                 sh 'ls -ltr'
+                sh 'whoami'
+                sh 'ls -ltr /home/mandharek/finalProject/'
             }
         }
 
