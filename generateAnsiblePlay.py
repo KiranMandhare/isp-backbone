@@ -96,7 +96,8 @@ def generatePlayBook():
     tasks  = "---"
     tasks += "\n  - name: Generate Router Config"
     tasks += "\n    become: true"
-    tasks += "\n    template: src=backboneRouter.j2 dest=/home/mandharek/finalProject/Nexus-Repo/{{ item.hostname }}.conf"
+    tasks += "\n    delegate_to: localhost"
+    tasks += "\n    template: src=backboneRouter.j2 dest={{ item.hostname }}.conf"
     tasks += "\n    with_items: \"{{ routers }}\""
     with open("isp-backbone/tasks/main.yml","w") as t:
         t.write(tasks)
