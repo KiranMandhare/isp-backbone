@@ -25,7 +25,7 @@ pipeline {
             ])
             }
         }
-        
+
         stage('Initalize Ansible Framework') {
             steps{
                     sh  'ansible-galaxy init isp-backbone'
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Build Router Config'){
             steps{
-                sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
+                sh 'ansible-playbook isp-backbone/backboneISPTopology.yml --as-become-pass << "Shweta@@01"'
             }
         }
     }
