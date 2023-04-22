@@ -13,7 +13,7 @@ pipeline {
             steps{
             cleanWs()
             script {
-                   VERSION_NUMBER = '${RELEASE}.${BUILDS_ALL_TIME}'
+                   VERSION_NUMBER = "${RELEASE}.${BUILDS_ALL_TIME}"
                    currentBuild.displayName = "${VERSION_NUMBER}"
             }
             checkout([$class: 'GitSCM',
@@ -34,6 +34,7 @@ pipeline {
             steps{
                     sh  'python3 generateAnsiblePlay.py'
                     sh  'cp backboneRouter.j2  isp-backbone/templates/backboneRouter.j2'
+                    sh 'ls -ltra isp-backbone'
             }
         }
         stage('Build Router Config'){
