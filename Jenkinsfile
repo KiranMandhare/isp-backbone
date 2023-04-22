@@ -13,7 +13,7 @@ pipeline {
             steps{
             cleanWs()
             script {
-                   VERSION_NUMBER = VersionNumber(versionNumberString: '${RELEASE}.${BUILDS_ALL_TIME}')
+                   VERSION_NUMBER = '${RELEASE}.${BUILDS_ALL_TIME}'
                    currentBuild.displayName = "${VERSION_NUMBER}"
             }
             checkout([$class: 'GitSCM',
