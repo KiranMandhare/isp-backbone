@@ -7,7 +7,6 @@ def fetchConnectionParameter(fileName="MgmtDetails.csv"):
     try:
         with open(fileName,mode='r') as file:
             routerList=csv.reader(file)
-            headers = next(routerList, None)
             for router in routerList:
                 r={
                     'device_type': router[6],
