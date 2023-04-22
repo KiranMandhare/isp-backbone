@@ -35,6 +35,7 @@ pipeline {
                     sh  'python3 generateAnsiblePlay.py'
                     sh  'cp backboneRouter.j2  isp-backbone/templates/backboneRouter.j2'
                     sh 'ls -ltra isp-backbone'
+                    
             }
         }
         stage('Build Router Config'){
