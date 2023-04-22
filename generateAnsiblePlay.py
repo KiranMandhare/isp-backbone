@@ -84,7 +84,6 @@ def generateVarFile(csvFileName="data.csv"):
 
     with open("isp-backbone/vars/main.yml","w") as vars:
         vars.write(variables)
-        
 def generatePlayBook():
 
     finalPlay  = "\n- name: Generate Configs"
