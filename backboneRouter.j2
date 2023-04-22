@@ -1,0 +1,159 @@
+Building configuration...
+
+Current configuration : 1214 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname {{ item.hostname }}
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret {{ item.enable_secret }}
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+!
+!
+!
+!         
+no ip domain lookup
+ip domain name demo
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+username admin password 0 password
+!
+!
+ip tcp synwait-time 5
+ip ssh version 2
+! 
+!
+!
+! OSPF configuration
+
+{% for process in item.ospf %}
+router ospf {{ process.processID }}
+ {% for network in process.networks %}
+ network {{ network }}
+ {% endfor %}
+
+{% endfor %}
+!
+!
+!Loopback section
+
+{% for l in item.loopbacks %}
+interface loopback {{ l.name }}
+ ip addr {{ l.ip }}
+{% endfor %}
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+{% if 'FastEthernet0/0' in item.interfaces %}
+ ip address {{ item.interfaces['FastEthernet0/0'] }}
+ no shutdown
+{% else %}
+ no ip address
+ shutdown
+{% endif %}
+ speed auto
+ duplex auto
+!
+interface FastEthernet1/0
+{% if 'FastEthernet1/0' in item.interfaces %}
+ ip address {{ item.interfaces['FastEthernet1/0'] }}
+ no shutdown
+{% else %}
+ no ip address
+ shutdown
+{% endif %}
+ speed auto
+ duplex auto
+!
+interface FastEthernet1/1
+{% if 'FastEthernet1/1' in item.interfaces %}
+ ip address {{ item.interfaces['FastEthernet1/1'] }}
+ no shutdown
+{% else %}
+ no ip address
+ shutdown
+{% endif %}
+ speed auto
+ duplex auto
+!
+!         
+interface FastEthernet2/0
+{% if 'FastEthernet2/0' in item.interfaces %}
+ ip address {{ item.interfaces['FastEthernet2/0'] }}
+ no shutdown
+{% else %}
+ no ip address
+ shutdown
+{% endif %}
+ speed auto
+ duplex auto
+!
+!
+interface GigabitEthernet3/0
+{% if 'GigabitEthernet3/0' in item.interfaces %}
+ ip address {{ item.interfaces['GigabitEthernet3/0'] }}
+ no shutdown
+{% else %}
+ no ip address
+ shutdown
+{% endif %}
+ speed auto
+ duplex auto
+ negotiation auto
+
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login local
+ transport input all
+line vty 5 15
+ login local
+ transport input all
+!
+!
+end
+

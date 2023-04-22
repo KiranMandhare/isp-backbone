@@ -4,10 +4,18 @@ pipeline {
         // clean before build
         skipDefaultCheckout(true)
     }
+    environment {
+        ENVIRONMENT = 'TEST'
+        RELEASE     = '15.0'
+    }
     stages {
         stage('Git Checkout') {
             steps{
             cleanWs()
+            script {
+                   VERSION_NUMBER = VersionNumber(versionNumberString: '${RELEASE}.${BUILDS_ALL_TIME}')
+                   currentBuild.displayName = "${VERSION_NUMBER}"
+            }
             checkout([$class: 'GitSCM',
                     branches: [[name: '*/test']],
                     doGenerateSubmoduleConfigurations: false,
@@ -16,13 +24,22 @@ pipeline {
                     userRemoteConfigs: [[credentialsId: '830e2b5c-4676-42b7-8aff-3551e02073e1', url: 'https://github.com/KiranMandhare/isp-backbone.git']]
             ])
             }
-
         }
-        stage('Execute Application') {
+        stage('Initalize Ansible Framework') {
             steps{
-                    sh "ls -ltra"
+                    sh  'ansible-galaxy init isp-backbone'
             }
-
+        }
+        stage('Create Ansible plauybook') {
+            steps{
+                    sh  'python3 generateAnsiblePlay.py'
+                    sh  'cp backboneRouter.j2  isp-backbone/templates/backboneRouter.j2'
+            }
+        }
+        stage('Build Router Config'){
+            steps{
+                sh 'ansible-playbook backboneISPTopology.yml'
+            }
         }
     }
     post {
