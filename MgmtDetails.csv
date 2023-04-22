@@ -1,0 +1,5 @@
+RouterName,IP,Username,Password,Secret,Port,DeviceType
+R1,198.51.100.11,admin,password,password,22,cisco_ios
+R2,198.51.100.12,admin,password,password,22,cisco_ios
+R3,198.51.100.13,admin,password,password,22,cisco_ios
+R4,198.51.100.14,admin,password,password,22,cisco_ios

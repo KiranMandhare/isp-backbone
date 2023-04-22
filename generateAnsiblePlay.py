@@ -21,7 +21,7 @@ def getIPandSubnet(ipaddress,wildcard=False):
     else:
         return ip+" "+subnetMask[subnet]
 
-def generateVarFile(csvFileName="data.csv"):
+def generateVarFile(csvFileName="ospfConfig.csv"):
     oneTab = "\n  "
     twoTab = "\n    "
     threeTab = "\n      "

@@ -52,6 +52,11 @@ pipeline {
                 sh 'cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
             }
         }
+        stage('Push using NetConf'){
+            steps{
+                sh 'python3 pushConfigs.py'
+            }
+        }
     }
     post {
         success {
