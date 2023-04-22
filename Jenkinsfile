@@ -31,6 +31,7 @@ pipeline {
                     sh  'ansible-galaxy init isp-backbone'
             }
         }
+        
         stage('Create Ansible plauybook') {
             steps{
                     sh  'python3 generateAnsiblePlay.py'
