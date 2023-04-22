@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Build Router Config'){
             steps{
-                sh 'ansible-playbook isp-backbone/backboneISPTopology.yml --ask-become-pass << "Shweta@@01"'
+                sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
             }
         }
     }
