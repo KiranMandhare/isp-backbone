@@ -38,7 +38,6 @@ pipeline {
 
             }
         }
-        
         stage('Build Router Config'){
             steps{
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
@@ -47,7 +46,6 @@ pipeline {
                 sh 'ls -ltr /home/mandharek/finalProject/'
             }
         }
-
         stage('Push build to Nexus'){
             steps{
                 sh 'cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
