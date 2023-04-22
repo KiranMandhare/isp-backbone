@@ -84,6 +84,7 @@ def generateVarFile(csvFileName="data.csv"):
 
     with open("isp-backbone/vars/main.yml","w") as vars:
         vars.write(variables)
+        
 def generatePlayBook():
 
     finalPlay  = "\n- name: Generate Configs"
@@ -95,12 +96,12 @@ def generatePlayBook():
 
     tasks  = "---"
     tasks += "\n  - name: Generate Router Config"
-    tasks += "\n    template: src=backboneRouter.j2 dest={{ item.hostname }}.conf owner=root group=root mode=774"
+    tasks += "\n    template: src=backboneRouter.j2 dest=Nexus-Repo//{{ item.hostname }}.conf owner=root group=root mode=774"
     tasks += "\n    with_items: \"{{ routers }}\""
     with open("isp-backbone/tasks/main.yml","w") as t:
         t.write(tasks)
 
-    with open("isp-backbone/kima4508_main.yml","w") as t:
+    with open("isp-backbone/backboneISPTopology.yml","w") as t:
         t.write(finalPlay)
 
 generateVarFile()
