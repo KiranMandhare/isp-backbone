@@ -60,10 +60,12 @@ router bgp {{ bgpN.ASNumber }}
  {% for neighbor in bgpN.neighbors %}
  neighbor {{ neighbor }}
  {% endfor %}    
-{% if 'network' in bgpN %}
+
+{% if 'networks' in bgpN %}
  {% for network in bgpN.networks %}
  network {{ network }}
  {% endfor %}
+{%endif%}
 {% endfor %}
 !
 !Loopback section
