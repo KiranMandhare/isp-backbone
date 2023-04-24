@@ -8,7 +8,7 @@ pipeline {
         ENVIRONMENT = 'TEST'
         RELEASE     = '15.0'
     }
-    stages {
+    stages
         stage('Git Checkout') {
             steps{
             cleanWs()
@@ -56,7 +56,7 @@ pipeline {
                 sh 'python3 pushConfigs.py'
             }
         }
-
+}
     post {
         success {
             mail(body: 'Jenkins build : SUCCESS', subject: 'Jenkins Pipeline Status', to: 'kima4508@colorado.edu')  
@@ -67,5 +67,4 @@ pipeline {
             echo "Mail sent to kima4508@colorado.edu regarding pipeline failure"       
         }
     }
-}
 }
