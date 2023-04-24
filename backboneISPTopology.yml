@@ -1,7 +1,0 @@
-
-- name: Generate Configs
-  hosts: routers
-  become: yes
-  become_user: root
-  roles:
-  - isp-backbone
