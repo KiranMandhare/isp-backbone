@@ -69,6 +69,13 @@ router bgp {{ bgpN.ASNumber }}
 {%endif%}
 {% endfor %}
 !
+!
+! Static Route
+{% if item.hostname == 'R1' %}
+ip route 5.5.5.5 255.255.255.0 200.200.200.1
+{% endif %}
+
+
 !Loopback section
 
 {% for l in item.loopbacks %}

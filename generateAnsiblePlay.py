@@ -148,7 +148,6 @@ def generateVarFile(OSPFcsvFileName="ospfConfig.csv",BGPPeeringcsvFileName="bgpC
                         variables+= twoTab+"  networks:"
                     generatedIPandSubnet = getIPandSubnet(bgpRow['NetworkToAdvertise']).split()
                     variables+= threeTab+"- "+generatedIPandSubnet[0]+" mask "+generatedIPandSubnet[1]
-
     with open("isp-backbone/vars/main.yml","w") as vars:
         vars.write(variables)
 
