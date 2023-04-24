@@ -56,6 +56,7 @@ pipeline {
                 sh 'python3 pushConfigs.py'
             }
         }
+        
     post {
         success {
             mail(body: 'Jenkins build : SUCCESS', subject: 'Jenkins Pipeline Status', to: 'kima4508@colorado.edu')  
