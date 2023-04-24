@@ -38,6 +38,7 @@ pipeline {
 
             }
         }
+        
         stage('Build Router Config'){
             steps{
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
@@ -68,5 +69,5 @@ pipeline {
             echo "Mail sent to kima4508@colorado.edu regarding pipeline failure"       
         }
     }
-    
+
 }
