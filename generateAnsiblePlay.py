@@ -118,6 +118,7 @@ def generateVarFile(OSPFcsvFileName="ospfConfig.csv",BGPPeeringcsvFileName="bgpC
                  variables+= threeTab+"- "+getIPandSubnet(ipAddress,wildcard=True)+" area "+area
         
         #bgp config addition
+        variables+= oneTab+"  bgp:"        
         with open(BGPPeeringcsvFileName,"r") as bgpCSVFile:
             bgpCSVFileReader = csv.DictReader(bgpCSVFile)
             ASNumber=False
