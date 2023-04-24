@@ -61,6 +61,7 @@ router bgp {{ bgpN.ASNumber }}
  neighbor {{ neighbor }}
  {% endfor %}    
 
+
 {% if 'networks' in bgpN %}
  {% for network in bgpN.networks %}
  network {{ network }}
