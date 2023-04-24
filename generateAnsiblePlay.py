@@ -21,22 +21,23 @@ def getIPandSubnet(ipaddress,wildcard=False):
     else:
         return ip+" "+subnetMask[subnet]
 
-def generateVarFile(csvFileName="ospfConfig.csv"):
+def generateVarFile(OSPFcsvFileName="ospfConfig.csv",BGPPeeringcsvFileName="bgpConfig.csv", BGPAdvcsvFileName="bgpAdvConfig.csv"):
     oneTab = "\n  "
     twoTab = "\n    "
     threeTab = "\n      "
 
     variables = """routers:"""
 
-    with open(csvFileName,"r") as csvFile:
+    with open(OSPFcsvFileName,"r") as csvFile:
         csvFileReader = csv.DictReader(csvFile)
         #next(csvFileReader)
         interfaces=""
         loopbacks=""
         ospfProcess={}
-
+        bgp={}
         uniqueRouters = {}
         #iteration=0
+        currentRouter = ""
         for row in csvFileReader:
             #print(str(iteration)+"  "+str(uniqueRouters))
             #iteration+=1
@@ -50,7 +51,40 @@ def generateVarFile(csvFileName="ospfConfig.csv"):
                         variables+= twoTab+"- processID: "+process
                         variables+= twoTab+"  networks:"
                         for ipAddress,area in ospfProcess[process]:
-                             variables+= threeTab+"- "+getIPandSubnet(ipAddress,wildcard=True)+" area "+area
+                            variables+= threeTab+"- "+getIPandSubnet(ipAddress,wildcard=True)+" area "+area
+
+                    #bgp config addition
+                    variables+= oneTab+"  bgp:"
+                    with open(BGPPeeringcsvFileName,"r") as bgpCSVFile:
+                        bgpCSVFileReader = csv.DictReader(bgpCSVFile)
+                        ASNumber=False
+                        for bgpRow in bgpCSVFileReader:
+                            print(bgpRow)
+                            print(currentRouter)
+                            print(bgpRow['Hostname'])
+                            if currentRouter == bgpRow['Hostname']:
+                                if ASNumber is False:
+                                    ASNumber=True
+                                    variables+= twoTab+"- ASNumber: "+bgpRow['ASNumber']
+                                    variables+= twoTab+"  neighbors:"
+                                
+                                variables+= threeTab+"- "+bgpRow['NeighborIP']+" remote-as "+bgpRow['NeighborAS']
+                                variables+= threeTab+"- "+bgpRow['NeighborIP']+" update-source loopback 0"
+                                if bgpRow['ASNumber'] !=  bgpRow['NeighborAS']:
+                                    #ebgp
+                                    variables+= threeTab+"- "+bgpRow['NeighborIP']+" ebgp-multihop "+bgpRow['TTL'] 
+                            #print(variables)
+                    with open(BGPAdvcsvFileName,"r") as bgpCSVFile:
+                        bgpCSVFileReader = csv.DictReader(bgpCSVFile)
+                        networks = False
+                        for bgpRow in bgpCSVFileReader:
+                            if currentRouter == bgpRow['Hostname']:
+                                if networks is False:
+                                    networks= True
+                                    variables+= twoTab+"  networks:"
+                                generatedIPandSubnet = getIPandSubnet(bgpRow['NetworkToAdvertise']).split()
+                                variables+= threeTab+"- "+generatedIPandSubnet[0]+" mask "+generatedIPandSubnet[1]
+
                 variables  += oneTab+"- hostname: "+row["Hostname"]
                 variables  += oneTab+"  enable_secret: password"
                 interfaces = oneTab+"  interfaces:"
@@ -71,6 +105,7 @@ def generateVarFile(csvFileName="ospfConfig.csv"):
                     ospfProcess[row["OSPF Process Id"]].append((row["IP/Subnet"],row["OSPF Area"]))
                 else:
                     ospfProcess[row["OSPF Process Id"]].append((row["IP/Subnet"],row["OSPF Area"]))
+            currentRouter=row["Hostname"]
 
     variables+=interfaces
     variables+=loopbacks
@@ -81,9 +116,39 @@ def generateVarFile(csvFileName="ospfConfig.csv"):
             variables+= twoTab+"  networks:"
             for ipAddress,area in ospfProcess[process]:
                  variables+= threeTab+"- "+getIPandSubnet(ipAddress,wildcard=True)+" area "+area
+        
+        #bgp config addition
+        with open(BGPPeeringcsvFileName,"r") as bgpCSVFile:
+            bgpCSVFileReader = csv.DictReader(bgpCSVFile)
+            ASNumber=False
+            for bgpRow in bgpCSVFileReader:
+                if currentRouter == bgpRow['Hostname']:
+                    if ASNumber is False:
+                        ASNumber=True
+                        variables+= twoTab+"- ASNumber: "+bgpRow['ASNumber']
+                        variables+= twoTab+"  neighbors:"
+                    
+                    variables+= threeTab+"- "+bgpRow['NeighborIP']+" remote-as "+bgpRow['NeighborAS']
+                    variables+= threeTab+"- "+bgpRow['NeighborIP']+" update-source loopback 0"
+                    if bgpRow['ASNumber'] !=  bgpRow['NeighborAS']:
+                        #ebgp
+                        variables+= threeTab+"- "+bgpRow['NeighborIP']+" ebgp-multihop "+bgpRow['TTL'] 
+          
+          
+        with open(BGPAdvcsvFileName,"r") as bgpCSVFile:
+            bgpCSVFileReader = csv.DictReader(bgpCSVFile)
+            networks = False
+            for bgpRow in bgpCSVFileReader:
+                if currentRouter == bgpRow['Hostname']:
+                    if networks is False:
+                        networks= True
+                        variables+= twoTab+"  networks:"
+                    generatedIPandSubnet = getIPandSubnet(bgpRow['NetworkToAdvertise']).split()
+                    variables+= threeTab+"- "+generatedIPandSubnet[0]+" mask "+generatedIPandSubnet[1]
 
     with open("isp-backbone/vars/main.yml","w") as vars:
         vars.write(variables)
+
 def generatePlayBook():
 
     finalPlay  = "\n- name: Generate Configs"
@@ -96,7 +161,7 @@ def generatePlayBook():
     tasks  = "---"
     tasks += "\n  - name: Generate Router Config"
     tasks += "\n    template: src=backboneRouter.j2 dest={{ item.hostname }}.conf"
-    tasks += "\n    with_items: \"{{ routers }}\""
+    tasks += "\n    with_items: \"{{ routers }}\""    
     with open("isp-backbone/tasks/main.yml","w") as t:
         t.write(tasks)
 

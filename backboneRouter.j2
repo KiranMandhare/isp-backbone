@@ -47,13 +47,23 @@ ip ssh version 2
 ! OSPF configuration
 
 {% for process in item.ospf %}
-router ospf {{ process.processID }}
- {% for network in process.networks %}
+router ospf {{ process['processID'] }}
+ {% for network in process['networks'] %}
  network {{ network }}
  {% endfor %}
 
 {% endfor %}
 !
+! BGP configuration
+{% for bgpN in item.bgp %}
+router bgp {{ bgpN.ASNumber }}
+ {% for neighbor in bgpN.neighbors %}
+ neighbor {{ neighbor }}
+ {% endfor %}
+ {% for network in bgpN.networks %}
+ network {{ network }}
+ {% endfor %}
+{% endfor %}
 !
 !Loopback section
 
