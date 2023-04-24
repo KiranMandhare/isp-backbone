@@ -130,7 +130,7 @@ def generateVarFile(OSPFcsvFileName="ospfConfig.csv",BGPPeeringcsvFileName="bgpC
                         variables+= twoTab+"  neighbors:"
                     
                     variables+= threeTab+"- "+bgpRow['NeighborIP']+" remote-as "+bgpRow['NeighborAS']
-                    variables+= threeTab+"- "+bgpRow['NeighborIP']+" update-source loopback 0"
+                    variables+= threeTab+"- "+bgpRow['NeighborIP']+" update-source loopback 1"
                     if bgpRow['ASNumber'] !=  bgpRow['NeighborAS']:
                         #ebgp
                         variables+= threeTab+"- "+bgpRow['NeighborIP']+" ebgp-multihop "+bgpRow['TTL'] 
