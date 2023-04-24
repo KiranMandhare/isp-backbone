@@ -68,4 +68,5 @@ pipeline {
             echo "Mail sent to kima4508@colorado.edu regarding pipeline failure"       
         }
     }
+    
 }
