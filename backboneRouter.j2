@@ -43,6 +43,13 @@ ip tcp synwait-time 5
 ip ssh version 2
 ! 
 !
+!Loopback section
+
+{% for l in item.loopbacks %}
+interface loopback {{ l.name }}
+ ip addr {{ l.ip }}
+{% endfor %}
+!
 !
 ! OSPF configuration
 
@@ -76,13 +83,7 @@ ip route 5.5.5.5 255.255.255.0 200.200.200.1
 {% endif %}
 
 
-!Loopback section
 
-{% for l in item.loopbacks %}
-interface loopback {{ l.name }}
- ip addr {{ l.ip }}
-{% endfor %}
-!
 !
 !
 !
