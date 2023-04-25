@@ -30,15 +30,14 @@ pipeline {
                     sh  'ansible-galaxy init isp-backbone'
             }
         }
-        stage('Create Ansible plauybook') {
+        stage('Create Ansible playbook') {
             steps{
                     sh  'python3 generateAnsiblePlay.py'
                     sh  'cp backboneRouter.j2  isp-backbone/templates/backboneRouter.j2'
                     sh  'ls -ltra isp-backbone'
 
             }
-        }
-        
+        } 
         stage('Build Router Config'){
             steps{
                 sh 'ansible-playbook isp-backbone/backboneISPTopology.yml'
@@ -52,7 +51,7 @@ pipeline {
                 sh 'cp R*.conf  /home/mandharek/finalProject/Nexus-Repo/'
             }
         }
-        stage('Push using NetConf'){
+        stage('Push RouterConfig'){
             steps{
                 sh 'python3 pushConfigs.py'
             }
