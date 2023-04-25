@@ -25,6 +25,8 @@ pipeline {
             ])
             }
         }
+
+
         stage('Initalize Ansible Framework') {
             steps{
                     sh  'ansible-galaxy init isp-backbone'
@@ -70,14 +72,3 @@ pipeline {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
